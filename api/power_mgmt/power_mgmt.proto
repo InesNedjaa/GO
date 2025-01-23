@@ -1,0 +1,37 @@
+syntax = "proto3" ;
+option go_package = "api/power_mgmt" ; 
+import "api/google/api/annotations.proto";
+
+service Power_Mgmt {
+    rpc PowerOn (PowerOnDeviceRequest) returns (PowerDeviceResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/poweron"
+            body: "*"
+        };
+    } 
+    rpc PowerOff (PowerDeviceRequest) returns (PowerDeviceResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/poweroff"
+            body: "*"
+        };
+    } 
+    rpc Reboot (PowerDeviceRequest) returns (PowerDeviceResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/reboot"
+            body: "*"
+        };
+    } 
+
+}
+message PowerOnDeviceRequest {
+    string mac_addr = 1 ;
+
+}
+message PowerDeviceRequest {
+    string host = 1 ;
+    string username = 2 ;
+    string privateKeyPath = 3 ;
+}
+message PowerDeviceResponse {
+    string message = 1 ;
+}

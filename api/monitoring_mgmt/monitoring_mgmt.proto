@@ -1,0 +1,39 @@
+syntax = "proto3" ;
+option go_package = "api/monitoring_mgmt" ;
+import "api/google/api/annotations.proto";
+
+service Monitoring_mgmt {
+    rpc GetMetrics (MetricsRequest) returns (MetricsResponse) {
+        option (google.api.http) = {
+            get: "/api/v1/metrics"
+        };
+    }
+    rpc GetLogs (LogsRequest) returns (stream LogResponse) {
+        option (google.api.http) = {
+            get: "/api/v1/logs"
+        };
+    }
+    // usefull logs found /var/log/syslog , /var/log/kern.log , /var/log/auth.log
+}
+
+message MetricsRequest {
+    int32 device_id = 1;
+}
+message MetricsResponse {
+    float cpu_usage = 1;
+    float memory_usage = 2 ;
+    uint64 network_bandwidth = 3 ;
+}
+enum LogType {
+    System_logs = 0;
+    Kernel_logs = 1;
+    Auth_logs = 2 ;
+}
+message LogsRequest {
+    LogType log_type =1;
+    int32 device_id = 2 ;
+
+}
+message LogResponse {
+    bytes log_file =1 ;
+}
