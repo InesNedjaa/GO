@@ -1,0 +1,21 @@
+syntax = "proto3" ;
+option go_package = "api/power_mgmt" ; 
+
+service Power_Mgmt {
+    rpc PowerOn (PowerOnDeviceRequest) returns (PowerDeviceResponse) {} 
+    rpc PowerOff (PowerDeviceRequest) returns (PowerDeviceResponse) {} 
+    rpc Reboot (PowerDeviceRequest) returns (PowerDeviceResponse) { } 
+
+}
+message PowerOnDeviceRequest {
+    string mac_addr = 1 ;
+
+}
+message PowerDeviceRequest {
+    string host = 1 ;
+    string username = 2 ;
+    string privateKeyPath = 3 ;
+}
+message PowerDeviceResponse {
+    string message = 1 ;
+}

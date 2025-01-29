@@ -1,0 +1,15 @@
+syntax = "proto3" ;
+option go_package = "api/script_mgmt" ;
+
+
+service Script_Mgmt {
+    rpc ScheduleScript (ScheduleRequest ) returns (ScheduleResponse) {}
+}
+message ScheduleRequest {
+    string time = 1 ; // "seconds minutes hour day_of_month month day_of_week " exemple "*/5 * * * * *"
+    string script_path = 2 ; 
+}
+message ScheduleResponse {
+    string message = 1 ;
+    int32 id = 2 ;
+}
