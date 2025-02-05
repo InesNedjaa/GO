@@ -24,7 +24,7 @@ func StartServer () error {
 		log.Printf("failed to listen on port %s err : %s", DefaultPort, err)
 		return err
 	}
-	grpc := grpc.NewServer()
+	grpc := grpc.NewServer() 
 	power_mgmt.RegisterPower_MgmtServer(grpc, &internal.PowerMgmtServer{})
 	script_mgmt.RegisterScript_MgmtServer(grpc, &internal.ScriptMgmtServer{})
 	monitoring_mgmt.RegisterMonitoringMgmtServer(grpc, &internal.MonitoringMgmtServer{})

@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"oob-connector-proxy/v2/api/proxy_service"
+	"oob-connector-proxy/v2/internal/proxy"
 	"os"
 
 	"github.com/gorilla/websocket"
@@ -17,19 +19,23 @@ type OobMetadata struct {
 	Connection_type string `json:"connection_type"`
 }
 
-func saveMetadata(metadata OobMetadata) error {
-	file, err := os.OpenFile("metadata.json", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+func GetMetadata() (*OobMetadata ,error ){
+	file, err := os.Open("config/metadata_oob_m2.json")
 	if err != nil {
-		return err
+		log.Printf("Error in opening file")
+		return nil , err
 	}
 	defer file.Close()
-	encoder := json.NewEncoder(file)
-	err = encoder.Encode(metadata)
+
+	var metadata OobMetadata
+	decoder := json.NewDecoder(file)
+	err = decoder.Decode(&metadata)
 	if err != nil {
-		return err
+		log.Printf("Error in decoding %v" , err)
+		return nil , err
 	}
 
-	return nil
+	return &metadata , nil
 }
 
 var upgrader = websocket.Upgrader{
@@ -53,31 +59,31 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 
 
 func StartWSserver(metadata *OobMetadata) {
+	server_addr := fmt.Sprintf("%s:%s", metadata.Address, metadata.Port)
 	http.HandleFunc("/ws", handleWebSocket)
 
 	server := &http.Server{
-		Addr:   metadata.Address + ":" + metadata.Port,
+		Addr:   server_addr,
 	}
-	fmt.Printf("Starting server on port %s...\n",metadata.Address)
+	fmt.Println("Server is listening on " , server_addr)
 	if err := server.ListenAndServe(); err != nil {
 		fmt.Printf("Error starting server: %v\n", err)
 	}
 }
 
 func main() {
-	metadata := OobMetadata{
-		Name:           "oob_module_2",
-		Address:        "127.0.0.1",
-		Port:           "8082",
-		Connection_type: "WS",
-	}
-
-	err := saveMetadata(metadata)
+	metadata ,err := GetMetadata()
 	if err != nil {
-		fmt.Println("Error saving metadata:", err)
-	} else {
-		fmt.Println("Module metadata saved successfully")
+		log.Printf("Error in getting server metadata : %v" , err)
+		return 
 	}
+	proxy.SendMetadata(&proxy_service.Metadata{
+		Name: metadata.Name,
+		Addr: metadata.Address,
+		Port: metadata.Port,
+		ConnectionType: metadata.Connection_type,
+	})
+	StartWSserver(metadata)
+	
 
-	StartWSserver(&metadata)
 }

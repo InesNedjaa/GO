@@ -2,6 +2,7 @@ package internal
 
 import (
 	"context"
+	"log"
 	pb "oob-connector-proxy/v2/api/power_mgmt"
 	"oob-connector-proxy/v2/internal/proxy"
 )
@@ -12,55 +13,46 @@ type PowerMgmtServer struct {
 }
 
 func (s *PowerMgmtServer) PowerOn(context context.Context, request *pb.PowerOnDeviceRequest) (*pb.PowerDeviceResponse, error) {
-    proxy_request := &proxy.ProxyType{
-		Data: map[string]string{
-			"mac_addr": request.MacAddr,
-		},
-		Oob_module: proxy.OobModuleType{
-			Name:           "OOB_module_1", 
-			Addr:           "127.0.0.1",
-			Port:           "8081",
-			Connection_type: "HTTP",
-		},
+    
+	data:= map[string]string{"mac_addr": request.MacAddr,}
+	oob_module_name:= "oob_module_1"
+	err := proxy.ForwardRequest(data,oob_module_name )
+	if err != nil {
+		log.Fatalf("Error forwarding request: %v", err)
+		return nil ,err
 	}
-	proxy.RecieveServiceRequest(proxy_request)
     return nil, nil
 }
 
 func ( s *PowerMgmtServer) PowerOff (context context.Context , request *pb.PowerDeviceRequest)(*pb.PowerDeviceResponse , error) {
 	
-	proxy_request := &proxy.ProxyType{
-		Data: map[string]string{
-			"host": request.Host,
-			"private_key_path": request.PrivateKeyPath,
-			"username": request.Username,
-		},
-		Oob_module: proxy.OobModuleType{
-			Name:           "OOB_module_1", 
-			Addr:           "127.0.0.1",
-			Port:           "8081",
-			Connection_type: "HTTP",
-		},
+	
+	data:= map[string]string{
+		"host": request.Host,
+		"private_key_path": request.PrivateKeyPath,
+		"username": request.Username,
 	}
-	proxy.RecieveServiceRequest(proxy_request)
-    return nil, nil
+	oob_module_name:= "oob_module_1"
+	err := proxy.ForwardRequest(data,oob_module_name )
+	if err != nil {
+		log.Fatalf("Error forwarding request: %v", err)
+		return nil ,err
+	}   
+	 return nil, nil
 }
 
 func ( s *PowerMgmtServer) Rebot (context context.Context , request *pb.PowerDeviceRequest)(*pb.PowerDeviceResponse , error) {
 	
-	proxy_request := &proxy.ProxyType{
-		Data: map[string]string{
-			"host": request.Host,
-			"private_key_path": request.PrivateKeyPath,
-			"username": request.Username,
-		},
-		Oob_module: proxy.OobModuleType{
-			Name:           "OOB_module_1", 
-			Addr:           "127.0.0.1",
-			Port:           "8081",
-			Connection_type: "HTTP",
-		},
+	data:= map[string]string{
+		"host": request.Host,
+		"private_key_path": request.PrivateKeyPath,
+		"username": request.Username,
 	}
-	proxy.RecieveServiceRequest(proxy_request)
-    return nil, nil
+	oob_module_name:= "oob_module_1"
+	err := proxy.ForwardRequest(data,oob_module_name )
+	if err != nil {
+		log.Fatalf("Error forwarding request: %v", err)
+		return nil ,err
+	}
+		return nil, nil
 }

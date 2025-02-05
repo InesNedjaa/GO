@@ -2,6 +2,7 @@ package internal
 
 import (
 	"context"
+	"log"
 	pb "oob-connector-proxy/v2/api/script_mgmt"
 	"oob-connector-proxy/v2/internal/proxy"
 )
@@ -16,21 +17,17 @@ type GoScriptJob struct {
 
 func (s *ScriptMgmtServer) ScheduleScript (context context.Context , request *pb.ScheduleRequest) (*pb.ScheduleResponse , error) {
 	
-	proxy_request := &proxy.ProxyType{
-		Data: map[string]string{
-			"script_path": request.ScriptPath,
-			"time": request.Time, 
-			
-		},
-		Oob_module: proxy.OobModuleType{
-			Name:           "OOB_module_3", 
-			Addr:           "127.0.0.1",
-			Port:           "8083",
-			Connection_type: "IPC",
-		},
+	data:= map[string]string{
+		"script_path": request.ScriptPath,
+		"time": request.Time, 
+		}
+	oob_module_name:= "oob_module_3"
+	err := proxy.ForwardRequest(data,oob_module_name )
+	if err != nil {
+		log.Fatalf("Error forwarding request: %v", err)
+		return nil ,err
 	}
-	proxy.RecieveServiceRequest(proxy_request)
-    return nil, nil
+	    return nil, nil
 
 	 
 }

@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"oob-connector-proxy/v2/api/proxy_service"
+	"oob-connector-proxy/v2/internal/proxy"
 	"os"
 )
 
@@ -15,22 +17,26 @@ type OobMetadata struct {
 	Connection_type string `json:"connection_type"`
 }
 
-func saveMetadata(metadata OobMetadata) error {
-	file, err := os.OpenFile("metadata.json", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+func GetMetadata() (*OobMetadata ,error ){
+	file, err := os.Open("config/metadata_oob_m3.json")
 	if err != nil {
-		return err
+		log.Printf("Error in opening file")
+		return nil , err
 	}
 	defer file.Close()
-	encoder := json.NewEncoder(file)
-	err = encoder.Encode(metadata)
+
+	var metadata OobMetadata
+	decoder := json.NewDecoder(file)
+	err = decoder.Decode(&metadata)
 	if err != nil {
-		return err
+		log.Printf("Error in decoding %v" , err)
+		return nil , err
 	}
 
-	return nil
+	return &metadata , nil
 }
 
-func StartIPCserver (metadata OobMetadata) {
+func StartIPCserver (metadata *OobMetadata) {
 	server_addr := fmt.Sprintf("%s:%s", metadata.Address, metadata.Port)
 	listener, err := net.Listen("tcp", server_addr)     //conn, err := net.Dial("unix", socket_path) for communication btw services in the same machine
 	if err != nil {
@@ -55,18 +61,18 @@ func StartIPCserver (metadata OobMetadata) {
 }
 
 func main() {
-	metadata := OobMetadata{
-		Name:           "oob_module_3",
-		Address:        "127.0.0.1",
-		Port:           "8083",
-		Connection_type: "IPC",
-	}
-
-	err := saveMetadata(metadata)
+	metadata ,err := GetMetadata()
 	if err != nil {
-		fmt.Println("Error saving metadata:", err)
-	} else {
-		fmt.Println("Module metadata saved successfully")
+		log.Printf("Error in getting server metadata : %v" , err)
+		return 
 	}
+	proxy.SendMetadata(&proxy_service.Metadata{
+		Name: metadata.Name,
+		Addr: metadata.Address,
+		Port: metadata.Port,
+		ConnectionType: metadata.Connection_type,
+	})
 	StartIPCserver(metadata)
+	
+	
 }

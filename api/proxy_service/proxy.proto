@@ -1,0 +1,23 @@
+syntax = "proto3" ;
+option go_package = "api/proxy_service" ;
+
+
+service ProxyService {
+    rpc OobMetadata (Metadata ) returns (Response) {}
+    rpc RecieveServiceRequest (Request) returns (Response) {}
+}
+message Metadata {
+    string Name =1 ;
+	string Addr =2 ;
+	string Port =3;
+	string Connection_type =4 ;
+}
+
+message Response {
+    string message =1;
+}
+
+message Request {
+    map <string,string>  Data =1 ;
+	string Oob_module_name =2;
+}
