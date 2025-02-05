@@ -1,4 +1,4 @@
-PROTO_DIRS = api/proxy_service
+PROTO_DIRS = api/proxy_service api/monitoring_mgmt api/power_mgmt api/script_mgmt 
 
 compile:
 	@for dir in $(PROTO_DIRS); do \
