@@ -13,14 +13,13 @@ This project consists of 3 microservices written in Go, communicating via gRPC. 
 ---
 
 ## 🗂 Project Structure
-
+```
 gRPC Gateway
 │   go.mod
 │   go.sum
 │   Makefile
 │   Readme.md
 │   script.sh
-│   structure.txt
 │   
 ├───api
 │   ├───google
@@ -28,23 +27,23 @@ gRPC Gateway
 │   │           annotations.proto
 │   │           http.proto
 │   │           
-│   ├───monitoring_mgmt
-│   │       monitoring_mgmt.pb.go
-│   │       monitoring_mgmt.pb.gw.go
-│   │       monitoring_mgmt.proto
-│   │       monitoring_mgmt_grpc.pb.go
+│   ├───service1
+│   │       service1.pb.go
+│   │       service1.pb.gw.go
+│   │       service1.proto
+│   │       service1_grpc.pb.go
 │   │       
-│   ├───power_mgmt
-│   │       power_mgmt.pb.go
-│   │       power_mgmt.pb.gw.go
-│   │       power_mgmt.proto
-│   │       power_mgmt_grpc.pb.go
+│   ├───service2
+│   │       service2.pb.go
+│   │       service2.pb.gw.go
+│   │       service2.proto
+│   │       service2_grpc.pb.go
 │   │       
-│   └───script_mgmt
-│           script_mgmt.pb.go
-│           script_mgmt.pb.gw.go
-│           script_mgmt.proto
-│           script_mgmt_grpc.pb.go
+│   └───service3
+│           service3.pb.go
+│           service3.pb.gw.go
+│           service3.proto
+│           service3_grpc.pb.go
 │           
 ├───cmd
 │   ├───client
@@ -54,8 +53,8 @@ gRPC Gateway
 │           main.go
 │           
 └───internal
-        monitoring_mgmt.go
-        power_mgmt.go
-        script_mgmt.go
+        service1.go
+        service2.go
+        service3.go
         
-
+```
