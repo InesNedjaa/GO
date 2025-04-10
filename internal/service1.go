@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 	"math"
-	pb "oob-connector/api/monitoring_mgmt"
+	pb "grpc-gateway/api/service1"
 	"os"
 	"time"
 
@@ -14,13 +14,13 @@ import (
 	"github.com/shirou/gopsutil/net"
 	"google.golang.org/grpc"
 )
-type MonitoringMgmtServer struct {
-	pb.UnimplementedMonitoringMgmtServer
+type Service1Server struct {
+	pb.UnimplementedService1Server
 	
 }
 
 
-func (s *MonitoringMgmtServer) GetMetrics (context context.Context , request *pb.MetricsRequest) (*pb.MetricsResponse , error) {
+func (s *Service1Server) GetMetrics (context context.Context , request *pb.MetricsRequest) (*pb.MetricsResponse , error) {
 	    var cpu_usage_percentage float64
 		var memory_usage_percentage float64
 		var network_bandwidth uint64
@@ -65,7 +65,7 @@ func (s *MonitoringMgmtServer) GetMetrics (context context.Context , request *pb
 	
 }
 
-func (s *MonitoringMgmtServer) GetLogs ( request *pb.LogsRequest , stream grpc.ServerStreamingServer[pb.LogResponse])  error {
+func (s *Service1Server) GetLogs ( request *pb.LogsRequest , stream grpc.ServerStreamingServer[pb.LogResponse])  error {
 	var file_path string 
     switch request.GetLogType(){
 	case pb.LogType_System_logs : file_path="/var/log/syslog"

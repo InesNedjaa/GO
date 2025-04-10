@@ -4,9 +4,9 @@ import (
 	"context"
 	"log"
 	"net/http"
-	"oob-connector/api/monitoring_mgmt"
-	"oob-connector/api/power_mgmt"
-	"oob-connector/api/script_mgmt"
+	"grpc-gateway/api/service1"
+	"grpc-gateway/api/service2"
+	"grpc-gateway/api/service3"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
@@ -27,17 +27,17 @@ func main () {
 	defer conn.Close()
 	mux := runtime.NewServeMux()
 
-	err = power_mgmt.RegisterPower_MgmtHandler(context.Background(), mux, conn)
+	err = service2.RegisterService2Handler(context.Background(), mux, conn)
 	if err != nil {
 		log.Fatalf("Failed to register Power_Mgmt gateway: %v", err)
 	}
 
-	err = script_mgmt.RegisterScript_MgmtHandler(context.Background(), mux, conn)
+	err = service3.RegisterService3Handler(context.Background(), mux, conn)
 	if err != nil {
 		log.Fatalf("Failed to register Script_Mgmt gateway: %v", err)
 	}
 
-	err = monitoring_mgmt.RegisterMonitoringMgmtHandler(context.Background(), mux, conn)
+	err = service1.RegisterService1Handler(context.Background(), mux, conn)
 	if err != nil {
 		log.Fatalf("Failed to register MonitoringMgmt gateway: %v", err)
 	}

@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"oob-connector/api/monitoring_mgmt"
-	"oob-connector/api/power_mgmt"
-	"oob-connector/api/script_mgmt"
-	"oob-connector/internal"
+	"grpc-gateway/api/service1"
+	"grpc-gateway/api/service2"
+	"grpc-gateway/api/service3"
+	"grpc-gateway/internal"
 
 	"google.golang.org/grpc"
 )
@@ -25,9 +25,9 @@ func StartServer () error {
 		return err
 	}
 	grpc := grpc.NewServer()
-	power_mgmt.RegisterPower_MgmtServer(grpc, &internal.PowerMgmtServer{})
-	script_mgmt.RegisterScript_MgmtServer(grpc, &internal.ScriptMgmtServer{})
-	monitoring_mgmt.RegisterMonitoringMgmtServer(grpc, &internal.MonitoringMgmtServer{})
+	service2.RegisterService2Server(grpc, &internal.Service2Server{})
+	service3.RegisterService3Server(grpc, &internal.Service3Server{})
+	service1.RegisterService1Server(grpc, &internal.Service1Server{})
 	log.Printf("Server is running on port %s", DefaultPort)
 	if err := grpc.Serve(listener); err != nil {
 		log.Printf("error while serving : %s", err)

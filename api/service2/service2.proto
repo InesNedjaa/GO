@@ -1,8 +1,8 @@
 syntax = "proto3" ;
-option go_package = "api/power_mgmt" ; 
+option go_package = "api/service2" ; 
 import "api/google/api/annotations.proto";
 
-service Power_Mgmt {
+service Service2 {
     rpc PowerOn (PowerOnDeviceRequest) returns (PowerDeviceResponse) {
         option (google.api.http) = {
             post: "/api/v1/poweron"

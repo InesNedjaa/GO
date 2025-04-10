@@ -2,19 +2,19 @@ package internal
 import(
 	"context"
 	"fmt"
-	pb "oob-connector/api/power_mgmt"
+	pb "grpc-gateway/api/service2"
 	"os/exec"
 	
 )
-type PowerMgmtServer struct {
-	pb.UnimplementedPower_MgmtServer
+type Service2Server struct {
+	pb.UnimplementedService2Server
 	
 	
 }
-func (s *PowerMgmtServer) PowerOn(context context.Context, request *pb.PowerOnDeviceRequest) (*pb.PowerDeviceResponse, error) {
+func (s *Service2Server) PowerOn(context context.Context, request *pb.PowerOnDeviceRequest) (*pb.PowerDeviceResponse, error) {
 
     command := fmt.Sprintf("wakeonlan %s", request.MacAddr)
-    cmd := exec.Command("bash", "-c", command)
+    cmd := exec.Command("bash", "-c", command) 
     _, err := cmd.CombinedOutput()
     if err != nil {
         return nil, err
@@ -23,7 +23,7 @@ func (s *PowerMgmtServer) PowerOn(context context.Context, request *pb.PowerOnDe
         Message: "device powered on successfully",}, nil
 }
 
-func ( s *PowerMgmtServer) PowerOff (context context.Context , request *pb.PowerDeviceRequest)(*pb.PowerDeviceResponse , error) {
+func ( s *Service2Server) PowerOff (context context.Context , request *pb.PowerDeviceRequest)(*pb.PowerDeviceResponse , error) {
 	command := fmt.Sprintf("ssh -i %s %s@%s sudo shutdown -h now", request.PrivateKeyPath, request.Username, request.Host)
     cmd := exec.Command("bash", "-c", command)
 	_, err := cmd.CombinedOutput()
@@ -33,7 +33,7 @@ func ( s *PowerMgmtServer) PowerOff (context context.Context , request *pb.Power
 	return &pb.PowerDeviceResponse{Message: "device powered of successfully"} , nil
 }
 
-func ( s *PowerMgmtServer) Rebot (context context.Context , request *pb.PowerDeviceRequest)(*pb.PowerDeviceResponse , error) {
+func ( s *Service2Server) Rebot (context context.Context , request *pb.PowerDeviceRequest)(*pb.PowerDeviceResponse , error) {
 	command := fmt.Sprintf("ssh -i %s %s@%s sudo reboot", request.PrivateKeyPath, request.Username, request.Host)
     cmd := exec.Command("bash", "-c", command)
 	_, err := cmd.CombinedOutput()

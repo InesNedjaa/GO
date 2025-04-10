@@ -1,8 +1,8 @@
 syntax = "proto3" ;
-option go_package = "api/monitoring_mgmt" ;
+option go_package = "api/service1" ;
 import "api/google/api/annotations.proto";
 
-service Monitoring_mgmt {
+service Service1 {
     rpc GetMetrics (MetricsRequest) returns (MetricsResponse) {
         option (google.api.http) = {
             get: "/api/v1/metrics"
