@@ -1,0 +1,23 @@
+syntax= "proto3" ;
+option go_package = "proto/metrics" ;
+message RegisterDeviceRequest {
+    int32 Uid = 1;
+} 
+message RegisterDeviceResponse {
+    string message = 1 ;
+} 
+message SendMetricsData {
+    float cpu = 2;         
+    float memory = 3 ;
+    float bandwith = 4 ;
+
+}  
+message Metricsack {
+    string message =1;
+} 
+
+service Metrics {
+ rpc RegisterDevice (RegisterDeviceRequest ) returns (RegisterDeviceResponse) {} ;
+ rpc StreamMetrics ( stream SendMetricsData) returns (Metricsack) {} ;
+ 
+}
