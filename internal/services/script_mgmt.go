@@ -3,8 +3,8 @@ package internal
 import (
 	"context"
 	"log"
-	pb "oob-connector-proxy/v2/api/script_mgmt"
-	"oob-connector-proxy/v2/internal/proxy"
+	pb "go-proxy/api/script_mgmt"
+	"go-proxy/internal/proxy"
 )
 type ScriptMgmtServer struct {
 	pb.UnimplementedScript_MgmtServer
@@ -21,7 +21,7 @@ func (s *ScriptMgmtServer) ScheduleScript (context context.Context , request *pb
 		"script_path": request.ScriptPath,
 		"time": request.Time, 
 		}
-	oob_module_name:= "oob_module_3"
+	oob_module_name:= "module_3"
 	err := proxy.ForwardRequest(data,oob_module_name )
 	if err != nil {
 		log.Fatalf("Error forwarding request: %v", err)

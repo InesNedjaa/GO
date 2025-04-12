@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"oob-connector-proxy/v2/api/proxy_service"
+	"go-proxy/api/proxy_service"
 	"sync"
 	"time"
 
@@ -34,7 +34,7 @@ func InitGrpcClient () error{
 
 }
 
-func ForwardRequest (data map[string]string , oob_module_name string) error {
+func ForwardRequest (data map[string]string , module_name string) error {
 
 	err := InitGrpcClient()
 	if err != nil {
@@ -46,7 +46,7 @@ func ForwardRequest (data map[string]string , oob_module_name string) error {
 
 	response , err := grpcClient.RecieveServiceRequest(
 		ctx ,
-		&proxy_service.Request{Data: data,OobModuleName: oob_module_name},
+		&proxy_service.Request{Data: data,ModuleName: module_name},
 		)
 	if err != nil {
 		log.Fatalf("Error calling Proxy Service: %v", err)
@@ -59,7 +59,7 @@ func ForwardRequest (data map[string]string , oob_module_name string) error {
 }
 
 
-func SendMetadata(metadata *proxy_service.Metadata ) error {
+func SendMetadata(metadata *proxy_service.MetadataRequest ) error {
 	err := InitGrpcClient()
 	if err != nil {
 		return err
@@ -67,7 +67,7 @@ func SendMetadata(metadata *proxy_service.Metadata ) error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-   response, err := grpcClient.OobMetadata(ctx , metadata)
+   response, err := grpcClient.Metadata(ctx , metadata)
 	if err != nil {
 		log.Fatalf("Failed to send metadata: %v", err)
 		return err

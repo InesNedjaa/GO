@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net"
-	pb "oob-connector-proxy/v2/api/proxy_service"
-	"oob-connector-proxy/v2/internal/proxy"
+	pb "go-proxy/api/proxy_service"
+	"go-proxy/internal/proxy"
 
 	"google.golang.org/grpc"
 )

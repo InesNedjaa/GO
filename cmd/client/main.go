@@ -3,9 +3,9 @@ package main
 import (
 	"context"
 	"log"
-	"oob-connector-proxy/v2/api/monitoring_mgmt"
-	"oob-connector-proxy/v2/api/power_mgmt"
-	"oob-connector-proxy/v2/api/script_mgmt"
+	"go-proxy/api/monitoring_mgmt"
+	"go-proxy/api/power_mgmt"
+	"go-proxy/api/script_mgmt"
 	"time"
 
 	"google.golang.org/grpc"

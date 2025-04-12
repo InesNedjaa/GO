@@ -1,12 +1,28 @@
-PROTO_DIRS = api/proxy_service api/monitoring_mgmt api/power_mgmt api/script_mgmt 
-
 compile:
-	@for dir in $(PROTO_DIRS); do \
-		protoc $$dir/*.proto \
-			--go_out=. \
-			--go-grpc_out=. \
-			--go_opt=paths=source_relative \
-			--go-grpc_opt=paths=source_relative \
-			--proto_path=.; \
-	done
+	protoc api/monitoring_mgmt/*.proto \
+		--go_out=. --go-grpc_out=. --grpc-gateway_out=. \
+		--go_opt=paths=source_relative \
+		--go-grpc_opt=paths=source_relative \
+		--grpc-gateway_opt=paths=source_relative \
+		--proto_path=.
 
+	protoc  api/power_mgmt/*.proto \
+		--go_out=. --go-grpc_out=. --grpc-gateway_out=. \
+		--go_opt=paths=source_relative \
+		--go-grpc_opt=paths=source_relative \
+		--grpc-gateway_opt=paths=source_relative \
+		--proto_path=.
+
+	protoc api/script_mgmt/*.proto \
+		--go_out=. --go-grpc_out=. --grpc-gateway_out=. \
+		--go_opt=paths=source_relative \
+		--go-grpc_opt=paths=source_relative \
+		--grpc-gateway_opt=paths=source_relative \
+		--proto_path=.
+
+	protoc api/proxy_service/*.proto \
+		--go_out=. --go-grpc_out=. --grpc-gateway_out=. \
+		--go_opt=paths=source_relative \
+		--go-grpc_opt=paths=source_relative \
+		--grpc-gateway_opt=paths=source_relative \
+		--proto_path=.	

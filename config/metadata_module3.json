@@ -1,5 +1,5 @@
 {
-    "name": "oob_module_3",
+    "name": "module_3",
     "address": "127.0.0.1",
     "port": "8083",
     "connection_type": "IPC"

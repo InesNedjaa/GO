@@ -3,10 +3,10 @@ option go_package = "api/proxy_service" ;
 
 
 service ProxyService {
-    rpc OobMetadata (Metadata ) returns (Response) {}
+    rpc Metadata (MetadataRequest ) returns (Response) {}
     rpc RecieveServiceRequest (Request) returns (Response) {}
 }
-message Metadata {
+message MetadataRequest {
     string Name =1 ;
 	string Addr =2 ;
 	string Port =3;
@@ -19,5 +19,5 @@ message Response {
 
 message Request {
     map <string,string>  Data =1 ;
-	string Oob_module_name =2;
+	string Module_name =2;
 }

@@ -12,17 +12,17 @@ import (
 	"net/http"
 	"sync"
 
-	pb "oob-connector-proxy/v2/api/proxy_service"
+	pb "go-proxy/api/proxy_service"
 
 	"github.com/gorilla/websocket"
 )
 
 type ProxyType struct {
 	Data map [string]string
-	Oob_module_name string
+	Module_name string
 }
 
-type OobMetaData struct {
+type MetaData struct {
 	Name string
 	Addr string
 	Port string
@@ -31,13 +31,13 @@ type OobMetaData struct {
 }
 type ProxyServer struct {
 	pb.UnimplementedProxyServiceServer
-	Servers []OobMetaData 
+	Servers []MetaData 
 	serversMutex sync.RWMutex
 }
 
 
-func (s *ProxyServer)OobMetadata(ctx context.Context, req *pb.Metadata) (*pb.Response, error){
-	server_metadat:= OobMetaData{
+func (s *ProxyServer)Metadata(ctx context.Context, req *pb.MetadataRequest) (*pb.Response, error){
+	server_metadat:= MetaData{
 		Name: req.Name,
 		Addr: req.Addr,
 		Port: req.Port,
@@ -46,10 +46,7 @@ func (s *ProxyServer)OobMetadata(ctx context.Context, req *pb.Metadata) (*pb.Res
 	return &pb.Response{Message: "Metadata recieved successfully"} , nil
 
 }
-func findServerByName(server_name string , Servers []OobMetaData ) *OobMetaData {
-	
-	//serversMutex.RLock() 
-	//defer serversMutex.RUnlock()
+func findServerByName(server_name string , Servers []MetaData ) *MetaData {
 	
 	for i := range Servers {
 		if Servers[i].Name == server_name {
@@ -58,9 +55,9 @@ func findServerByName(server_name string , Servers []OobMetaData ) *OobMetaData 
 	}
 	return nil
 }
-func HTTPserver (oob_module *OobMetaData , data map [string]string ) (string ,error ){ 
+func HTTPserver (module *MetaData , data map [string]string ) (string ,error ){ 
 	var  response string 
-	server_url := fmt.Sprintf("http://%s:%s/", oob_module.Addr, oob_module.Port)
+	server_url := fmt.Sprintf("http://%s:%s/", module.Addr, module.Port)
 
 	jsonData, err := json.Marshal(data)
 	if err != nil {
@@ -86,7 +83,7 @@ func HTTPserver (oob_module *OobMetaData , data map [string]string ) (string ,er
 }
 
 
-func WSserver (oob_module *OobMetaData ) (string ,error){
+func WSserver (oob_module *MetaData ) (string ,error){
    var response string 
 	server_url := fmt.Sprintf("ws://%s:%s/ws", oob_module.Addr, oob_module.Port)	
 	conn, _, err := websocket.DefaultDialer.Dial(server_url, nil)
@@ -110,7 +107,7 @@ func WSserver (oob_module *OobMetaData ) (string ,error){
 
 	return response,nil
 }
-func IPCserver (oob_module *OobMetaData  ) (string ,error){ 
+func IPCserver (oob_module *MetaData  ) (string ,error){ 
 	var response string 
 	server_url := fmt.Sprintf("%s:%s", oob_module.Addr, oob_module.Port)
 	conn, err := net.Dial("tcp", server_url)
@@ -135,15 +132,15 @@ func IPCserver (oob_module *OobMetaData  ) (string ,error){
 
 func (s *ProxyServer)RecieveServiceRequest (ctx context.Context ,request *pb.Request) (*pb.Response, error) { 
 
-	oob_module := findServerByName(request.OobModuleName , s.Servers)
-	if oob_module == nil {
-		log.Printf("server not found")
+	module := findServerByName(request.ModuleName , s.Servers)
+	if module == nil {
+		log.Printf("server not found") 
 		return nil ,errors.New("server not found")
 	}
-     switch oob_module.Connection_type {
+     switch module.Connection_type {
 	 case "HTTP" :
 		
-			response , err:=HTTPserver(oob_module , request.Data)
+			response , err:=HTTPserver(module , request.Data)
 			if err != nil {
 				log.Println("Error in connecting to HTTP server")
 				return nil,err
@@ -152,7 +149,7 @@ func (s *ProxyServer)RecieveServiceRequest (ctx context.Context ,request *pb.Req
 	
 		
 	 case "WS" :
-			response ,err := WSserver(oob_module)
+			response ,err := WSserver(module)
 			if err != nil {
 				log.Println("Error in connecting to WS server")
 				return nil,err
@@ -161,7 +158,7 @@ func (s *ProxyServer)RecieveServiceRequest (ctx context.Context ,request *pb.Req
 		
 		
 	 case "IPC" :
-			response , err := IPCserver(oob_module)
+			response , err := IPCserver(module)
 			if err != nil {
 				log.Println("Error in connecting to HTTP server")
 				return nil,err

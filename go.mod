@@ -1,14 +1,14 @@
-module oob-connector-proxy/v2
+module go-proxy
 
 go 1.23.5
 
 require (
+	github.com/gorilla/websocket v1.5.3
 	google.golang.org/grpc v1.70.0
 	google.golang.org/protobuf v1.36.4
 )
 
 require (
-	github.com/gorilla/websocket v1.5.3 // indirect
 	golang.org/x/net v0.32.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/text v0.21.0 // indirect

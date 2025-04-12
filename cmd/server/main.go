@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"oob-connector-proxy/v2/api/monitoring_mgmt"
-	"oob-connector-proxy/v2/api/power_mgmt"
-	"oob-connector-proxy/v2/api/script_mgmt"
-	internal "oob-connector-proxy/v2/internal/services"
+	"go-proxy/api/monitoring_mgmt"
+	"go-proxy/api/power_mgmt"
+	"go-proxy/api/script_mgmt"
+	internal "go-proxy/internal/services"
 
 	"google.golang.org/grpc"
 )
